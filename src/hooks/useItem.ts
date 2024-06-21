@@ -21,14 +21,14 @@ function useItem() {
       }
 
       setItems(data);
-      return data; // Return fetched items
+      return data; 
     } catch (e: unknown) {
       if (e instanceof HttpException) {
         toast.error(e.message);
       } else {
         toast.error("An unexpected error occurred");
       }
-      return []; // Return an empty array in case of error
+      return [];
     } finally {
       setIsLoading(false);
     }

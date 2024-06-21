@@ -5,7 +5,7 @@ interface IItem {
 
 interface IAgeGroup {
   id: number;
-  ageGroupName: string; // Assuming AgeGroupEnum is a string representation in Java
+  ageGroupName: string;
 }
 
 interface IDiscipline {
@@ -28,6 +28,7 @@ interface IAthlete {
   age: number;
   imageUrl: string;
   club: IClub;
+  ageGroup: IAgeGroup;
   disciplines: IDiscipline[];
 }
 

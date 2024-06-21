@@ -13,6 +13,8 @@ function AthleteComponent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAthlete, setSelectedAthlete] = useState<IAthlete | null>(null);
   const [modalMode, setModalMode] = useState<'details' | 'delete' | 'edit' | 'create' | null>(null);
+  const [viewMode, setViewMode] = useState<'card' | 'table'>('card'); // State for view mode
+  const [sortConfig, setSortConfig] = useState<{ key: keyof IAthlete, direction: 'ascending' | 'descending' | null }>({ key: 'name', direction: 'ascending' });
 
   useEffect(() => {
     if (contextAthletes.length === 0) {
@@ -65,31 +67,101 @@ function AthleteComponent() {
     setModalMode(null);
   };
 
+  const toggleViewMode = () => {
+    setViewMode(viewMode === 'card' ? 'table' : 'card');
+  };
+
+  const getClassNamesFor = (name: keyof IAthlete) => {
+    if (sortConfig && sortConfig.key === name) {
+      return sortConfig.direction === 'ascending' ? 'sorted-asc' : 'sorted-desc';
+    }
+    return '';
+  };
+
+  const requestSort = (key: keyof IAthlete) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedAthletes = () => {
+    const sortableAthletes = [...athletes];
+    if (sortConfig !== null) {
+      sortableAthletes.sort((a: IAthlete, b: IAthlete) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableAthletes;
+  };
+
   return (
     <>
       <PageContainer>
         <TopGrid>
-        <h1>Athletes</h1>
-        <button className="btn" onClick={() => { handleCreateAthlete({}); setModalMode('create'); setIsModalOpen(true); }}>Create Athlete</button>
+          <h1>Athletes</h1>
+          <button className="btn" onClick={toggleViewMode}>
+            {viewMode === 'card' ? 'Switch to Table View' : 'Switch to Card View'}
+          </button>
+          <button className="btn" onClick={() => { handleCreateAthlete({}); setModalMode('create'); setIsModalOpen(true); }}>Create Athlete</button>
         </TopGrid>
-        <Grid1>
-        {isLoading && <p>Loading...</p>}
-          {athletes.map((athlete: IAthlete) => (
-            <div className="card" key={athlete.id}>
-              <h5>{athlete.name}</h5>
-              <img
-                style={{ cursor: 'pointer' }}
-                src={athlete.imageUrl || "https://via.placeholder.com/150"}
-                alt={athlete.name}
-                onClick={() => handleImageClick(athlete)}
-              />
-              <p>Age: {athlete.age}</p>
-              <p>Gender: {athlete.gender}</p>
-              <button className="btn" onClick={() => handleDeleteClick(athlete)}>Delete</button>
-              <button className="btn" onClick={() => handleEditClick(athlete)}>Edit</button>
-            </div>
-          ))}
-        </Grid1>
+        {viewMode === 'card' ? (
+          <Grid1>
+            {isLoading ? (
+              <p>Loading...</p>
+            ) : (
+              athletes.map((athlete: IAthlete) => (
+                <div className="card" key={athlete.id}>
+                  <h5>{athlete.name}</h5>
+                  <img
+                    style={{ cursor: 'pointer' }}
+                    src={athlete.imageUrl || "https://via.placeholder.com/150"}
+                    alt={athlete.name}
+                    onClick={() => handleImageClick(athlete)}
+                  />
+                  <p>Age: {athlete.age}</p>
+                  <p>Gender: {athlete.gender}</p>
+                  <button className="btn" onClick={() => handleDeleteClick(athlete)}>Delete</button>
+                  <button className="btn" onClick={() => handleEditClick(athlete)}>Edit</button>
+                </div>
+              ))
+            )}
+          </Grid1>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th className={getClassNamesFor('name')} onClick={() => requestSort('name')}>Name</th>
+                <th className={getClassNamesFor('age')} onClick={() => requestSort('age')}>Age</th>
+                <th className={getClassNamesFor('gender')} onClick={() => requestSort('gender')}>Gender</th>
+                <th className={getClassNamesFor('club.name')} onClick={() => requestSort('club.name')}>Club</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedAthletes().map((athlete: IAthlete) => (
+                <tr key={athlete.id}>
+                  <td>{athlete.name}</td>
+                  <td>{athlete.age}</td>
+                  <td>{athlete.gender}</td>
+                  <td>{athlete.club.name}</td>
+                  <td>
+                    <button className="btn" onClick={() => handleDeleteClick(athlete)}>Delete</button>
+                    <button className="btn" onClick={() => handleEditClick(athlete)}>Edit</button>
+                    <button className="btn" onClick={() => handleImageClick(athlete)}>Details</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </PageContainer>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         {modalMode === 'details' && selectedAthlete && (
@@ -141,7 +213,7 @@ const TopGrid = styled.div`
   }
 
   .btn {
-    margin-left: auto; /* Push the button to the right */
+    margin-left: 1rem; /* Adjust margin as needed */
   }
 `;
 

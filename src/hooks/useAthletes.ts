@@ -21,14 +21,14 @@ function useAthletes() {
       }
 
       setAthletes(data);
-      return data; // Return fetched athletes
+      return data;
     } catch (e: unknown) {
       if (e instanceof HttpException) {
         toast.error(e.message);
       } else {
         toast.error("An unexpected error occurred");
       }
-      return []; // Return an empty array in case of error
+      return [];
     } finally {
       setIsLoading(false);
     }

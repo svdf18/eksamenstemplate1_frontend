@@ -1,9 +1,3 @@
-/**
- * Utility Method to create options for a fetch call
- * @param method GET, POST, PUT, DELETE
- * @param body The request body (only relevant for POST and PUT)
- * @returns
- */
 function makeOptions(
   method: string,
   body: object | null
@@ -20,11 +14,6 @@ function makeOptions(
   }
   return opts;
 }
-
-/**
- * Utility Method to handle http-errors returned as a JSON-response with fetch
- * Meant to be used in the first .then() clause after a fetch-call
- */
 
 class HttpException extends Error {
   public status: number;

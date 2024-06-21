@@ -11,8 +11,6 @@ const Navbar = () => {
               <NavLinkStyled to="/">INFO</NavLinkStyled>
               <NavLinkStyled to="/athletes">ATHLETES</NavLinkStyled>
               <NavLinkStyled to="/result-types">RESULTS</NavLinkStyled>
-              <NavLinkStyled to="/items">ITEMS</NavLinkStyled>
-              <NavLinkStyled to="/itemstable">TABLE</NavLinkStyled>
             </Nav>
       </NavbarContainer>
     </NavbarWrapper>
@@ -20,7 +18,7 @@ const Navbar = () => {
 }
 
 const NavbarWrapper = styled.header`
-  position: fixed; /* Change to fixed */
+  position: fixed; 
   top: 0;
   left: 0;
   width: 100vw;
@@ -50,7 +48,7 @@ const NavbarContainer = styled.div`
   margin-right: 0.2em;
   align-items: center;
   justify-content: space-between;
-  padding: 0 4rem; /* Adjust the padding as needed */
+  padding: 0 4rem; 
 
 `;
 const Nav = styled.nav`
