@@ -1,0 +1,234 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --text-alt-color: #000;
+  --link-hover-color: #d0ff00;
+  --header-color: rgba(0, 0, 0, 0.5);
+  --background-color: #242424;
+  --border-color: #fff;
+  --border-alt-color: #000;
+  --image-text-color: #fff;
+  --accent1-color: #1a1a1a;
+  --accent2-color: rgba(255, 255, 255, 0.4);
+  --accent3-color: rgba(255, 255, 255, 0.6);
+  --black: #000;
+  --white: #fff;
+}
+
+html {
+  background-color: black;
+  --color-primary: #93818f;
+  --color-primary-transparent: rgba(137, 108, 131, 0.5);
+  --blur1: 10px;
+  --blur2: 20px;
+  --blur3: 30px;
+  --blur4: 40px;
+  --blur5: 50px;
+}
+
+body {
+  background-image: url('/logo-magenta.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+  background-attachment: fixed;
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  align-self: start;
+  line-height: 1.1;
+  letter-spacing: 0.05em;
+}
+
+h2 {
+  font-size: 1.7em;
+  align-self: start;
+  line-height: 1.1;
+  letter-spacing: 0.05em;
+  color: var(--link-hover-color);
+}
+
+h5 {
+  font-size: 1.2em;
+  line-height: 1.1;
+  letter-spacing: 0.05em;
+}
+
+button {
+  margin: 0 1em 0 0;
+  cursor: pointer;
+  color: white;
+  background-color: var(--black);
+  opacity: 0.8;
+  box-shadow: none;
+  transition: opacity 1000ms ease-in-out;
+  letter-spacing: 0.1em;
+  font-size: 1rem;
+  font-weight: 200;
+  outline: none;
+  border: none;
+  text-transform: uppercase;
+  background-image: none;
+  background-size: 0;
+  background-position: -1000px;
+  padding: 0.5rem 1em;
+}
+
+button:hover {
+  opacity: 1;
+  color: var(--link-hover-color);
+  background-color: var(--black);
+  transition: background-color 150ms ease-in-out, color 150ms ease-in-out;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+th, td {
+  border: none;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.card {
+  background-color: var(--accent1-color);
+  border-radius: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: none;
+  margin-bottom: 15px;
+  filter: blur(1px); /* Default blur */
+  transition: filter 0.5s ease-in-out;
+}
+
+.card:hover img {
+  filter: blur(0px); /* Hover blur */
+  opacity: 0.8;
+  transform: matrix(1.01, 0, 0, 1.01, 0, 0);
+}
+
+.table-container {
+  overflow-x: auto; 
+  width: 100vw;
+}
+
+.table {
+  width: 100%; 
+  border-spacing: 3em; 
+}
+
+.table img {
+  width: 30%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: none;
+}
+
+th, td {
+  padding: 0.5rem;
+  text-align: left;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Remove border for the first row */
+tr:first-child th {
+  border-top: none;
+}
+
+/* Remove border for the last row */
+tr:last-child th,
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* Header Styles */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 1rem;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  backdrop-filter: blur(5px); /* Blurring effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9000;
+}
+
+.modal {
+  background: var(--accent1-color);
+  width: 100%;
+  max-width: 560px; /* Fixed width */
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: none;
+    margin-bottom: 15px;
+    filter: blur(1px); /* Default blur */
+    transition: filter 0.5s ease-in-out;
+  }
+}
+
+.modalContent {
+  padding: 20px;
+  position: relative;
+}
+
+.closeButton {
+  position: absolute;
+  color: var(--link-hover-color);
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.imageStandard {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: none;
+}
