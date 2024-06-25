@@ -14,7 +14,6 @@ const FooterComponent = () => {
           <NavLinkStyledFooter to="/contact">Contact</NavLinkStyledFooter>
         </FooterNav>
         </FooterTextContainer>
-     
       </FooterContainer>
       <p>&copy; 2021 I | A</p>
     </FooterWrapper>

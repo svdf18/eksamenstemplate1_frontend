@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '../utils/Context';
 import { PageContainer } from '../styles/GlobalStyles';
 import { IResultType, IResultTime, IResultDistance, IResultPoints } from '../types/types';
@@ -18,6 +18,7 @@ const ResultsTableComponent = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedDiscipline, setSelectedDiscipline] = useState<string>('');
   const [selectedGender, setSelectedGender] = useState<string>('');
+  const [sortConfig, setSortConfig] = useState<{ direction: 'ascending' | 'descending' | null }>({ direction: 'ascending' });
 
   useEffect(() => {
     if (contextResultTypes.length === 0) {
@@ -106,6 +107,50 @@ const ResultsTableComponent = () => {
     setFilteredResults(filtered);
   };
 
+  const requestSort = () => {
+    let direction: 'ascending' | 'descending' = 'ascending';
+    if (sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ direction });
+  };
+
+  const getClassNamesFor = () => {
+    return sortConfig.direction === 'ascending' ? 'sorted-asc' : 'sorted-desc';
+  };
+
+  const sortedResults = () => {
+    const sortableResults = [...filteredResults];
+    if (sortConfig !== null) {
+      sortableResults.sort((a: IResultType, b: IResultType) => {
+        const aValue = getResultValue(a);
+        const bValue = getResultValue(b);
+
+        if (aValue < bValue) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableResults;
+  };
+
+  const getResultValue = (result: IResultType) => {
+    switch (result.resultType) {
+      case 'TIME':
+        return (result as IResultTime).time;
+      case 'DISTANCE':
+        return (result as IResultDistance).distance;
+      case 'POINTS':
+        return (result as IResultPoints).points;
+      default:
+        return '';
+    }
+  };
+
   return (
     <>
       <PageContainer>
@@ -122,9 +167,11 @@ const ResultsTableComponent = () => {
           <p>Loading...</p>
         ) : (
           <ResultsTable
-            results={filteredResults}
+            results={sortedResults()}
             onEditClick={handleEditClick}
             onDeleteClick={handleDeleteClick}
+            requestSort={requestSort}
+            getClassNamesFor={getClassNamesFor}
           />
         )}
       </PageContainer>
@@ -175,9 +222,11 @@ interface ResultsTableProps {
   results: IResultType[];
   onEditClick: (resultType: IResultType) => void;
   onDeleteClick: (resultType: IResultType) => void;
+  requestSort: () => void;
+  getClassNamesFor: () => string;
 }
 
-const ResultsTable = ({ results, onEditClick, onDeleteClick } : ResultsTableProps) => (
+const ResultsTable = ({ results, onEditClick, onDeleteClick, requestSort, getClassNamesFor }: ResultsTableProps) => (
   <table className="table">
     <thead>
       <tr>
@@ -186,7 +235,7 @@ const ResultsTable = ({ results, onEditClick, onDeleteClick } : ResultsTableProp
         <th>Athlete</th>
         <th>Discipline</th>
         <th>Result Type</th>
-        <th>Result</th>
+        <th onClick={requestSort} className={getClassNamesFor()}>Result</th>
         <th>Actions</th>
       </tr>
     </thead>

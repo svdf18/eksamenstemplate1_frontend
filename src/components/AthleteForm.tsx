@@ -3,69 +3,81 @@ import { IAthlete, IClub, IDiscipline } from '../types/types';
 import { fetchClubs, fetchDisciplines } from '../utils/apiUtils.ts';
 import styled from 'styled-components';
 
+// Definerer props interface for AthleteForm-komponenten
 interface AthleteFormProps {
-  athlete?: IAthlete; 
-  onSubmit: (formData: Partial<IAthlete>) => void;
+  athlete?: IAthlete; // Valgfri athlete-prop, der kan være undefined
+  onSubmit: (formData: Partial<IAthlete>) => void; // Funktion til at håndtere form-indsendelse
 }
 
-
-const AthleteForm: React.FC<AthleteFormProps> = ({ athlete, onSubmit }) => {
-  const [formData, setFormData] = useState<Partial<IAthlete>>({
-    name: athlete?.name || '',
-    gender: athlete?.gender || '',
-    age: athlete?.age || 0,
-    imageUrl: athlete?.imageUrl || '',
-    club: athlete?.club || { id: 0, name: '', city: ''},
-    disciplines: athlete?.disciplines || []
+// AthleteForm-komponenten
+const AthleteForm = ({ athlete, onSubmit }: AthleteFormProps) => {
+ 
+  const [formData, setFormData] = useState<Partial<IAthlete>>({  // State til at holde formularens data, initialiseret med athleten hvis tilgængelig
+    name: athlete?.name || '', // Athletens navn eller tom streng
+    gender: athlete?.gender || '', // Athletens køn eller tom streng
+    age: athlete?.age || 0, // Athletens alder eller 0
+    imageUrl: athlete?.imageUrl || '', // Billed-URL eller tom streng
+    club: athlete?.club || { id: 0, name: '', city: ''}, // Klub eller standard tom klub
+    disciplines: athlete?.disciplines || [] // Disciplines eller tom array
   });
 
+  // State til at holde listen af klubber
   const [clubs, setClubs] = useState<IClub[]>([]);
+  // State til at holde listen af discipliner
   const [disciplines, setDisciplines] = useState<IDiscipline[]>([]);
 
+  // useEffect til at hente initial data ved komponentens indlæsning
   useEffect(() => {
+    // Asynkron funktion til at hente data
     const loadInitialData = async () => {
-      const fetchedClubs = await fetchClubs();
-      console.log('Fetched Clubs:', fetchedClubs);
-      const fetchedDisciplines = await fetchDisciplines();
-      console.log('Fetched Disciplines:', fetchedDisciplines);
-      setClubs(fetchedClubs);
-      setDisciplines(fetchedDisciplines);
+      const fetchedClubs = await fetchClubs(); // Hent klubber fra API
+      console.log('Fetched Clubs:', fetchedClubs); // Log hentede klubber
+      const fetchedDisciplines = await fetchDisciplines(); // Hent discipliner fra API
+      console.log('Fetched Disciplines:', fetchedDisciplines); // Log hentede discipliner
+      setClubs(fetchedClubs); // Opdater state med hentede klubber
+      setDisciplines(fetchedDisciplines); // Opdater state med hentede discipliner
     };
 
-    loadInitialData();
-  }, []);
+    loadInitialData(); // Kald funktionen
+  }, []); // Tom array betyder at effekten kun kører ved første render
 
+  // Håndterer ændringer i inputfelter
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    console.log('handleChange:', name, value);
-    setFormData({ ...formData, [name]: value });
+    const { name, value } = e.target; // Hent feltets navn og værdi
+    console.log('handleChange:', name, value); // Log ændringen
+    setFormData({ ...formData, [name]: value }); // Opdater formData med den nye værdi
   };
 
+  // Håndterer ændringer i klubvælgeren
   const handleClubChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedClubId = parseInt(e.target.value);
-    const selectedClub = clubs.find(club => club.id === selectedClubId);
-    console.log('handleClubChange:', selectedClub);
-    setFormData({ ...formData, club: selectedClub || { id: 0, name: '', city: '' } });
+    const selectedClubId = parseInt(e.target.value); // Hent valgt klub ID
+    const selectedClub = clubs.find(club => club.id === selectedClubId); // Find valgt klub i listen
+    console.log('handleClubChange:', selectedClub); // Log valgt klub
+    setFormData({ ...formData, club: selectedClub || { id: 0, name: '', city: '' } }); // Opdater formData med valgt klub
   };
 
+  // Håndterer ændringer i disciplines-vælgeren
   const handleDisciplinesChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedDisciplineIds = Array.from(e.target.selectedOptions, option => parseInt(option.value));
+    const selectedDisciplineIds = Array.from(e.target.selectedOptions, option => parseInt(option.value)); // Hent valgte discipliner IDer
     const selectedDisciplines = selectedDisciplineIds.map(id => {
-      const foundDiscipline = disciplines.find(discipline => discipline.id === id);
-      console.log('handleDisciplinesChange - found discipline:', foundDiscipline);
-      return foundDiscipline || { id: 0, name: '' };
+      const foundDiscipline = disciplines.find(discipline => discipline.id === id); // Find discipliner i listen
+      console.log('handleDisciplinesChange - found discipline:', foundDiscipline); // Log fundne discipliner
+      return foundDiscipline || { id: 0, name: '' }; // Returner fundne discipliner eller tom disciplin
     });
-    console.log('handleDisciplinesChange - selected disciplines:', selectedDisciplines);
-    setFormData({ ...formData, disciplines: selectedDisciplines });
+    console.log('handleDisciplinesChange - selected disciplines:', selectedDisciplines); // Log valgte discipliner
+    // ts-expect-error - disciplines mangler i Partial<IAthlete>
+    setFormData({ ...formData, disciplines: selectedDisciplines }); // Opdater formData med valgte discipliner
   };
 
+  // Håndterer form indsendelse
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Form submitted - formData:', formData);
-    onSubmit(formData);
+    e.preventDefault(); // Forhindrer standard form indsendelse
+    console.log('Form submitted - formData:', formData); // Log form data
+    onSubmit(formData); // Kald onSubmit med form data
   };
 
   return (
+    // Returnerer formularens JSX
     <FormContainer onSubmit={handleSubmit}>
       <StyledInput
         type="text"
@@ -80,7 +92,7 @@ const AthleteForm: React.FC<AthleteFormProps> = ({ athlete, onSubmit }) => {
         name="gender"
         value={formData.gender || ''}
         onChange={handleChange}
-        placeholder="Gender"
+        placeholder="Gender M/F"
         required
       />
       <StyledInput

@@ -3,10 +3,10 @@ interface IItem {
   name: string;
 }
 
-interface IAgeGroup {
-  id: number;
-  ageGroupName: string;
-}
+// interface IAgeGroup {
+//   id: number;
+//   ageGroupName: string;
+// }
 
 interface IDiscipline {
   id: number;
@@ -26,9 +26,9 @@ interface IAthlete {
   name: string;
   gender: string;
   age: number;
-  imageUrl: string;
+  imageUrl: string; 
+  athleteAgeGroupEnum: string;
   club: IClub;
-  ageGroup: IAgeGroup;
   disciplines: IDiscipline[];
 }
 
@@ -44,13 +44,13 @@ interface IResultType {
   athlete: IAthlete;
   discipline: IDiscipline;
   resultType: "TIME" | "DISTANCE" | "POINTS";
-  time?: number;
+  time?: string;
   distance?: number;
   points?: number;
 }
 
 interface IResultTime extends IResultType {
-  time: number; // Time in seconds or appropriate unit
+  time: string; // Time in seconds or appropriate unit
 }
 
 interface IResultPoints extends IResultType {
@@ -63,7 +63,6 @@ interface IResultDistance extends IResultType {
 
 export type { 
   IItem,
-  IAgeGroup,
   IDiscipline,
   IClub,
   IAthlete,

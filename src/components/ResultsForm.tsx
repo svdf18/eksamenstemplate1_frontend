@@ -20,7 +20,7 @@ const ResultsForm = ({ resultType, onSubmit }: ResultsFormProps) => {
     athlete: resultType?.athlete || { id: 0, name: '', imageUrl: '', gender: '', age: 0, club: { id: 0, name: '', city: '' }, disciplines: [] },
     discipline: resultType?.discipline || { id: 0, name: '', gender: 'MIXED', resultType: 'TIME' },
     resultType: resultType?.resultType || 'TIME',
-    time: resultType?.time || 0,
+    time: resultType?.time || "",
     distance: resultType?.distance || 0,
     points: resultType?.points || 0,
   });
@@ -78,7 +78,7 @@ const ResultsForm = ({ resultType, onSubmit }: ResultsFormProps) => {
       ...formData,
       discipline: selectedDiscipline || { id: 0, name: '', gender: "MIXED", resultType: 'TIME' },
       resultType: selectedDiscipline?.resultType || 'TIME',
-      time: 0,
+      time: "",
       distance: 0,
       points: 0,
     });
@@ -162,11 +162,11 @@ const ResultsForm = ({ resultType, onSubmit }: ResultsFormProps) => {
           
           {formData.resultType === "TIME" && (
             <StyledInput
-              type="number"
+              type="string"
               name="time"
               value={formData.time || ''}
               onChange={handleInputChange}
-              placeholder="Enter Time"
+              placeholder="Enter Time: hh:mm:ss.SS"
               required
             />
           )}
